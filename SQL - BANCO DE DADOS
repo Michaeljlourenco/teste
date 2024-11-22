@@ -1,0 +1,45 @@
+-- Tabela Agencia
+CREATE TABLE Agencia (
+    nome_agencia VARCHAR(50) PRIMARY KEY,
+    cidade VARCHAR(50) NOT NULL
+);
+
+-- Tabela Cliente
+CREATE TABLE Cliente (
+    codigo_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome_cliente VARCHAR(100) NOT NULL,
+    endereco VARCHAR(200)
+);
+
+-- Tabela Conta
+CREATE TABLE Conta (
+    numero_conta INT AUTO_INCREMENT PRIMARY KEY,
+    saldo DECIMAL(15,2) NOT NULL,
+    data_ultimo_acesso DATE,
+    tipo_conta ENUM('poupanca', 'corrente') NOT NULL,
+    nome_agencia VARCHAR(50),
+    FOREIGN KEY (nome_agencia) REFERENCES Agencia(nome_agencia)
+);
+
+-- Tabela ContaPoupanca (Especialização)
+CREATE TABLE ContaPoupanca (
+    numero_conta INT PRIMARY KEY,
+    taxa_juros DECIMAL(5,2) NOT NULL,
+    FOREIGN KEY (numero_conta) REFERENCES Conta(numero_conta)
+);
+
+-- Tabela ContaCorrente (Especialização)
+CREATE TABLE ContaCorrente (
+    numero_conta INT PRIMARY KEY,
+    saques_registrados INT NOT NULL,
+    FOREIGN KEY (numero_conta) REFERENCES Conta(numero_conta)
+);
+
+-- Tabela ClienteConta (Relacionamento N:M)
+CREATE TABLE ClienteConta (
+    codigo_cliente INT,
+    numero_conta INT,
+    PRIMARY KEY (codigo_cliente, numero_conta),
+    FOREIGN KEY (codigo_cliente) REFERENCES Cliente(codigo_cliente),
+    FOREIGN KEY (numero_conta) REFERENCES Conta(numero_conta)
+);
